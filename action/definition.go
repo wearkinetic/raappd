@@ -4,24 +4,24 @@ package action
 // that handles authorization, and payload validation for
 // the payload and authorization token sent
 type Action struct {
-	Name               string          `json:"name"`
-	Description        string          `json:"description"`
-	PayloadDescription string          `json:"payloadDescription"`
-	ClaimsExtractor    ClaimsExtractor `json:"claimsExtractor"`
-	PayloadParser      PayloadParser   `json:"payloadParser"`
-	AuthValidator      AuthValidator   `json:"authValidator"`
-	Handler            Handler         `json:"handler"`
+	Verb              string            `json:"verb"`
+	Resource          string            `json:"resource"`
+	Name              string            `json:"name"`
+	Description       string            `json:"description"`
+	ClaimsExtractor   ClaimsExtractor   `json:"claimsExtractor"`
+	AuthValidator     AuthValidator     `json:"authValidator"`
+	Handler           Handler           `json:"handler"`
+	GetDefaultPayload GetDefaultPayload `json:"getDefaultPayload"`
 }
 
 // NewAction instanciates
 func NewAction(
 	name string,
 	description string,
-	payloadDescription string,
 	claimsExtractor ClaimsExtractor,
-	payloadParser PayloadParser,
 	authValidator AuthValidator,
 	handler Handler,
+	getDefaultPayload GetDefaultPayload,
 ) *Action {
 
 	if description == "" {
@@ -29,13 +29,12 @@ func NewAction(
 	}
 
 	return &Action{
-		Name:               name,
-		Description:        description,
-		PayloadDescription: payloadDescription,
-		ClaimsExtractor:    claimsExtractor,
-		PayloadParser:      payloadParser,
-		AuthValidator:      authValidator,
-		Handler:            handler,
+		Name:              name,
+		Description:       description,
+		ClaimsExtractor:   claimsExtractor,
+		AuthValidator:     authValidator,
+		Handler:           handler,
+		GetDefaultPayload: getDefaultPayload,
 	}
 
 }
