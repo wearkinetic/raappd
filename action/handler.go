@@ -25,12 +25,12 @@ func (a *Action) GetPrivateHandler() func(c *gin.Context) {
 
 		claimsJWTMapClaims, err := ExtractClaims(c)
 		if err != nil {
-			responses.RespondAccessNotGranted(c, err)
+			responses.RespondAccessNotGranted(c, ErrUnparsableJWT())
 			return
 		}
 		claimsItf, err := a.ClaimsExtractor(claimsJWTMapClaims)
 		if err != nil {
-			responses.RespondAccessNotGranted(c, err)
+			responses.RespondAccessNotGranted(c, ErrUnparsableJWT())
 			return
 		}
 
