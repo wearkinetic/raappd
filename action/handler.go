@@ -25,17 +25,17 @@ func (a *Action) GetPrivateHandler() func(c *gin.Context) {
 
 		claimsJWTMapClaims, err := ExtractClaims(c)
 		if err != nil {
-			responses.RespondAccessNotGranted(c, err)
+			responses.RespondAccessNotGranted(c, ErrUnparsableJWT())
 			return
 		}
 		claimsItf, err := a.ClaimsExtractor(claimsJWTMapClaims)
 		if err != nil {
-			responses.RespondAccessNotGranted(c, err)
+			responses.RespondAccessNotGranted(c, ErrUnparsableJWT())
 			return
 		}
 
 		// 2 - Parse the payload and check the type
-		payloadItf, err := a.PayloadParser(c)
+		payloadItf, err := a.ParsePayload(c)
 		if err != nil {
 			responses.RespondError(c, err)
 			return
@@ -59,7 +59,7 @@ func (a *Action) GetPrivateHandler() func(c *gin.Context) {
 func (a *Action) GetPublicHandler() func(c *gin.Context) {
 
 	return func(c *gin.Context) {
-		payloadItf, err := a.PayloadParser(c)
+		payloadItf, err := a.ParsePayload(c)
 		if err != nil {
 			responses.RespondError(c, err)
 			return
