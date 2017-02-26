@@ -32,13 +32,6 @@ func NewServer() *Server {
 		RequestHeaders: "Content-Type, Authorization",
 	}))
 
-	// Ping
-	engine.GET("/ping", func(c *gin.Context) {
-		responses.RespondObject(c, map[string]interface{}{
-			"message": "pong",
-		})
-	})
-
 	return &Server{
 		Engine:    engine,
 		Resources: map[string]*resource.Resource{},
@@ -46,7 +39,28 @@ func NewServer() *Server {
 
 }
 
+// AddDefaultEndpoints
+func (server *Server) AddDefaultEndpoints() {
+
+	// Ping
+	server.Engine.GET("/ping", func(c *gin.Context) {
+		responses.RespondObject(c, map[string]interface{}{
+			"message": "pong",
+		})
+	})
+
+	// Doc
+	server.Engine.GET("/doc", func(c *gin.Context) {
+		responses.RespondObject(c, server.MakeDoc())
+	})
+
+}
+
 // Run serves on a port
 func (server *Server) Run(port int) {
+	// Add default endpoints
+	server.AddDefaultEndpoints()
+
+	// Run
 	server.Engine.Run(fmt.Sprintf("0.0.0.0:%d", port))
 }
