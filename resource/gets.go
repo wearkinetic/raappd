@@ -12,8 +12,8 @@ func (r *Resource) MakeGetsHandler() func(c *gin.Context) {
 	return func(c *gin.Context) {
 
 		// Look for the action in URI's GET parameters
-		queryAction := c.Request.URL.Query().Get("action")
-		a, exists := r.Gets[queryAction]
+		queryName := c.Request.URL.Query().Get(GET_NAME)
+		a, exists := r.Gets[queryName]
 		if !exists {
 			responses.RespondNoHandler(c)
 			return
