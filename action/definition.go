@@ -4,13 +4,17 @@ package action
 // that handles authorization, and payload validation for
 // the payload and authorization token sent
 type Action struct {
-	Name               string          `json:"name"`
-	Description        string          `json:"description"`
-	PayloadDescription string          `json:"payloadDescription"`
-	ClaimsExtractor    ClaimsExtractor `json:"claimsExtractor"`
-	PayloadParser      PayloadParser   `json:"payloadParser"`
-	AuthValidator      AuthValidator   `json:"authValidator"`
-	Handler            Handler         `json:"handler"`
+	Verb               string            `json:"verb"`
+	Resource           string            `json:"resource"`
+	Name               string            `json:"name"`
+	Description        string            `json:"description"`
+	PayloadDescription string            `json:"payloadDescription"`
+	ClaimsExtractor    ClaimsExtractor   `json:"claimsExtractor"`
+	PayloadParser      PayloadParser     `json:"payloadParser"`
+	AuthValidator      AuthValidator     `json:"authValidator"`
+	Handler            Handler           `json:"handler"`
+	PayloadDescriptor  PayloadDescriptor `json:"payloadDescriptor"`
+	GetDefaultPayload  GetDefaultPayload `json:"getDefaultPayload"`
 }
 
 // NewAction instanciates
@@ -22,6 +26,8 @@ func NewAction(
 	payloadParser PayloadParser,
 	authValidator AuthValidator,
 	handler Handler,
+	payloadDescriptor PayloadDescriptor,
+	getDefaultPayload GetDefaultPayload,
 ) *Action {
 
 	if description == "" {
@@ -36,6 +42,8 @@ func NewAction(
 		PayloadParser:      payloadParser,
 		AuthValidator:      authValidator,
 		Handler:            handler,
+		PayloadDescriptor:  payloadDescriptor,
+		GetDefaultPayload:  getDefaultPayload,
 	}
 
 }

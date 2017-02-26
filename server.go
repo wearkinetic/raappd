@@ -40,14 +40,10 @@ func NewServer() *Server {
 }
 
 // AddDefaultEndpoints
-func (server *Server) AddDefaultEndpoints() {
+func (server *Server) AddDoc() {
 
-	// Ping
-	server.Engine.GET("/ping", func(c *gin.Context) {
-		responses.RespondObject(c, map[string]interface{}{
-			"message": "pong",
-		})
-	})
+	// Try to make doc, if something is incomplete it will fail here
+	server.MakeDoc()
 
 	// Doc
 	server.Engine.GET("/doc", func(c *gin.Context) {
@@ -58,8 +54,15 @@ func (server *Server) AddDefaultEndpoints() {
 
 // Run serves on a port
 func (server *Server) Run(port int) {
-	// Add default endpoints
-	server.AddDefaultEndpoints()
+	// Ping
+	server.Engine.GET("/ping", func(c *gin.Context) {
+		responses.RespondObject(c, map[string]interface{}{
+			"message": "pong",
+		})
+	})
+
+	// AddDoc
+	server.AddDoc()
 
 	// Run
 	server.Engine.Run(fmt.Sprintf("0.0.0.0:%d", port))
