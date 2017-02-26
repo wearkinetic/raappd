@@ -13,36 +13,36 @@ type ParameterDescription struct {
 	Name        string `json:"name"`
 	DataType    string `json:"datatype"`
 	Description string `json:"description"`
-	Mandatory   bool   `json:"mandatory"`
+	Required    bool   `json:"required"`
 }
 
 type GetDefaultPayload func() interface{}
 
 func (a *Action) MakePayloadDescription() map[string]*ParameterDescription {
 	defaultPayloadItf := a.GetDefaultPayload()
-	payloadDescription := a.PayloadDescriptor(defaultPayloadItf)
+	payloadDescription := map[string]*ParameterDescription{}
 
 	// Now verify all the fields are there
 	defaultPayloadValue := reflect.ValueOf(defaultPayloadItf)
 	defaultPayloadType := defaultPayloadValue.Type()
 	for i := 0; i < defaultPayloadValue.NumField(); i++ {
 		field := defaultPayloadType.Field(i).Tag.Get("json")
-		_, exists := payloadDescription[field]
-		if !exists {
+		description := defaultPayloadType.Field(i).Tag.Get("description")
+		required := defaultPayloadType.Field(i).Tag.Get("binding") == "required"
+
+		if description == "" {
 			FatalIncompleteParametersDescription(a.Resource, a.Verb, a.Name, field)
 		}
 
-		// Automatically add datatype and name
-		payloadDescription[field].DataType = defaultPayloadType.Field(i).Type.String()
-		payloadDescription[field].Name = field
+		// Extract the information from struct definition
+		payloadDescription[field] = &ParameterDescription{
+			Name:        field,
+			DataType:    defaultPayloadType.Field(i).Type.String(),
+			Description: description,
+			Required:    required,
+		}
+
 	}
 
 	return payloadDescription
-}
-
-func NewPD(description string, mandatory bool) *ParameterDescription {
-	return &ParameterDescription{
-		Description: description,
-		Mandatory:   mandatory,
-	}
 }

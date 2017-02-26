@@ -13,7 +13,6 @@ type Action struct {
 	PayloadParser      PayloadParser     `json:"payloadParser"`
 	AuthValidator      AuthValidator     `json:"authValidator"`
 	Handler            Handler           `json:"handler"`
-	PayloadDescriptor  PayloadDescriptor `json:"payloadDescriptor"`
 	GetDefaultPayload  GetDefaultPayload `json:"getDefaultPayload"`
 }
 
@@ -26,7 +25,6 @@ func NewAction(
 	payloadParser PayloadParser,
 	authValidator AuthValidator,
 	handler Handler,
-	payloadDescriptor PayloadDescriptor,
 	getDefaultPayload GetDefaultPayload,
 ) *Action {
 
@@ -42,7 +40,6 @@ func NewAction(
 		PayloadParser:      payloadParser,
 		AuthValidator:      authValidator,
 		Handler:            handler,
-		PayloadDescriptor:  payloadDescriptor,
 		GetDefaultPayload:  getDefaultPayload,
 	}
 
