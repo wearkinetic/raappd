@@ -29,7 +29,7 @@ func (server *Server) AddResource(r *resource.Resource) {
 
 	// Add the Delete
 	if r.Delete != nil {
-		server.Engine.POST(r.Endpoint, r.Delete.GetHandler())
+		server.Engine.DELETE(r.Endpoint, r.Delete.GetHandler())
 	}
 
 }
