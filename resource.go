@@ -1,35 +1,41 @@
 package raappd
 
-import "github.com/hippoai/raappd/resource"
+import (
+	"fmt"
+
+	"github.com/hippoai/raappd/resource"
+)
 
 // AddResource
-func (server *Server) AddResource(r *resource.Resource) {
+func (server *Server) AddResource(version string, r *resource.Resource) {
 
-	_, exists := server.Resources[r.Endpoint]
+	versionedEndpoint := fmt.Sprintf("%s/%s", version, r.Endpoint)
+
+	_, exists := server.Resources[versionedEndpoint]
 	if exists {
-		FatalResourceAlreadyExists(r.Endpoint)
+		FatalResourceAlreadyExists(versionedEndpoint)
 	}
 
-	server.Resources[r.Endpoint] = r
+	server.Resources[versionedEndpoint] = r
 
 	// Add the Gets
 	if len(r.Gets) > 0 {
-		server.Engine.GET(r.Endpoint, r.MakeGetsHandler())
+		server.Engine.GET(versionedEndpoint, r.MakeGetsHandler())
 	}
 
 	// Add the Post
 	if r.Post != nil {
-		server.Engine.POST(r.Endpoint, r.Post.GetHandler())
+		server.Engine.POST(versionedEndpoint, r.Post.GetHandler())
 	}
 
 	// Add the Put
 	if r.Put != nil {
-		server.Engine.PUT(r.Endpoint, r.Put.GetHandler())
+		server.Engine.PUT(versionedEndpoint, r.Put.GetHandler())
 	}
 
 	// Add the Delete
 	if r.Delete != nil {
-		server.Engine.DELETE(r.Endpoint, r.Delete.GetHandler())
+		server.Engine.DELETE(versionedEndpoint, r.Delete.GetHandler())
 	}
 
 }
