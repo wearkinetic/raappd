@@ -35,3 +35,10 @@ func (r *Resource) SetDelete(a *action.Action) {
 	a.Verb = "DELETE"
 	r.Delete = a
 }
+
+// SetPatch
+func (r *Resource) SetPatch(a *action.Action) {
+	a.Resource = r.Endpoint
+	a.Verb = "PATCH"
+	r.Patch = a
+}
