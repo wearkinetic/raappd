@@ -17,6 +17,7 @@ type Resource struct {
 	Post        *action.Action            `json:"post"`
 	Put         *action.Action            `json:"update"`
 	Delete      *action.Action            `json:"delete"`
+	Patch       *action.Action            `json:"patch"`
 }
 
 // NewResource instanciates an Endpoint
@@ -36,5 +37,6 @@ func NewResource(endpoint, description string) *Resource {
 		Post:        nil,
 		Put:         nil,
 		Delete:      nil,
+		Patch:       nil,
 	}
 }

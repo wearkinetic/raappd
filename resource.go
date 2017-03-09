@@ -38,4 +38,9 @@ func (server *Server) AddResource(version string, r *resource.Resource) {
 		server.Engine.DELETE(versionedEndpoint, r.Delete.GetHandler())
 	}
 
+	// Add the Patch
+	if r.Patch != nil {
+		server.Engine.PATCH(versionedEndpoint, r.Patch.GetHandler())
+	}
+
 }

@@ -9,6 +9,7 @@ type Doc struct {
 	Post        *action.Doc            `json:"post"`
 	Put         *action.Doc            `json:"update"`
 	Delete      *action.Doc            `json:"delete"`
+	Patch       *action.Doc            `json:"patch"`
 }
 
 func (r *Resource) MakeDoc() *Doc {
@@ -38,6 +39,11 @@ func (r *Resource) MakeDoc() *Doc {
 	// Delete
 	if r.Delete != nil {
 		doc.Delete = r.Delete.MakeDoc()
+	}
+
+	// Patch
+	if r.Patch != nil {
+		doc.Patch = r.Patch.MakeDoc()
 	}
 
 	return doc
