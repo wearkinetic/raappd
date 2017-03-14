@@ -29,7 +29,8 @@ func NewServer() *Server {
 	engine.Use(gin.Logger())
 	engine.Use(cors.Middleware(cors.Config{
 		Origins:        "*",
-		RequestHeaders: "Content-Type, Authorization",
+		Methods:        "GET, PUT, POST, DELETE",
+		RequestHeaders: "Origin, Content-Type, Authorization",
 	}))
 
 	return &Server{
