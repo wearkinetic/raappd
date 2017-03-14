@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hippoai/goutil"
-	"github.com/wearkinetic/beasag/berrors"
 )
 
 type PayloadParser func(c *gin.Context) (payloadItf interface{}, err error)
@@ -66,7 +65,7 @@ func (a *Action) ParseBody(c *gin.Context) (interface{}, error) {
 
 	err := c.BindJSON(defaultPayloadItf)
 	if err != nil {
-		return nil, berrors.ErrWrongPayload(defaultPayloadItf)
+		return nil, ErrWrongPayload(defaultPayloadItf)
 	}
 	return defaultPayloadItf, nil
 }
@@ -86,7 +85,7 @@ func (a *Action) ParseQueryParameters(c *gin.Context) (interface{}, error) {
 		required := defaultPayloadType.Field(i).Tag.Get("binding") == "required"
 		parameterValues := queryParameters[field]
 		if required && ((len(parameterValues) == 0) || (parameterValues[0] == "")) {
-			return nil, berrors.ErrWrongPayload(defaultPayloadItf)
+			return nil, ErrWrongPayload(defaultPayloadItf)
 		}
 
 		// Populate the query parameters
@@ -100,7 +99,7 @@ func (a *Action) ParseQueryParameters(c *gin.Context) (interface{}, error) {
 	err := goutil.JsonRestruct(queryParametersAsMapStrItf, defaultPayloadItf)
 
 	if err != nil {
-		return nil, berrors.ErrWrongPayload(defaultPayloadItf)
+		return nil, ErrWrongPayload(defaultPayloadItf)
 	}
 
 	return defaultPayloadItf, nil

@@ -16,3 +16,12 @@ func NoPublicEndpointSatisfiedByPayload(payloadItf interface{}) error {
 		},
 	)
 }
+
+func ErrWrongPayload(defaultPayloadItf interface{}) error {
+	return goerr.New(
+		ERR_WRONG_PAYLOAD,
+		map[string]interface{}{
+			"expectedPayloadStructure": defaultPayloadItf,
+		},
+	)
+}
