@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hippoai/raappd/resource"
+	"github.com/hippoai/raappd/responses"
 	cors "github.com/itsjamie/gin-cors"
-	"github.com/wearkinetic/beasag/responses"
 )
 
 type Server struct {
