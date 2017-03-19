@@ -4,11 +4,40 @@ import (
 	"reflect"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hippoai/goutil"
 )
 
 type PayloadParser func(c *gin.Context) (payloadItf interface{}, err error)
 type PayloadDescriptor func(payloadItf interface{}) map[string]*ParameterDescription
+
+type PayloadDescription struct {
+	Parameters map[string]*ParameterDescription `json:"parameters"`
+	NRequired  int                              `json:"nOptional"`
+	NOptional  int                              `json:"nRequired"`
+}
+
+func NewPayloadDescription() *PayloadDescription {
+	return &PayloadDescription{
+		Parameters: map[string]*ParameterDescription{},
+	}
+}
+
+func (payloadDescription *PayloadDescription) Add(name, dataType, description string, required bool) *PayloadDescription {
+	payloadDescription.Parameters[name] = NewParameterDescription(name, dataType, description, required)
+	if required {
+		payloadDescription.NRequired += 1
+	} else {
+		payloadDescription.NOptional += 1
+	}
+	return payloadDescription
+}
+
+func (payloadDescription *PayloadDescription) IsRequired(key string) (bool, error) {
+	param, ok := payloadDescription.Parameters[key]
+	if !ok {
+		return false, ErrParameterNotRequiredNorOptional(key)
+	}
+	return param.Required, nil
+}
 
 type ParameterDescription struct {
 	Name        string `json:"name"`
@@ -17,11 +46,22 @@ type ParameterDescription struct {
 	Required    bool   `json:"required"`
 }
 
+// NewParameterDescription instanciates
+func NewParameterDescription(name, dataType, description string, required bool) *ParameterDescription {
+	return &ParameterDescription{
+		Name:        name,
+		DataType:    dataType,
+		Description: description,
+		Required:    required,
+	}
+}
+
 type GetDefaultPayload func() interface{}
 
-func (a *Action) MakePayloadDescription() map[string]*ParameterDescription {
-	defaultPayloadItf := a.GetDefaultPayload()
-	payloadDescription := map[string]*ParameterDescription{}
+// ExtractExpectedPayload
+func ExtractExpectedPayload(defaultPayloadItf interface{}) (*PayloadDescription, error) {
+
+	payloadDescription := NewPayloadDescription()
 
 	// Now verify all the fields are there
 	defaultPayloadValue := reflect.ValueOf(defaultPayloadItf).Elem()
@@ -32,76 +72,17 @@ func (a *Action) MakePayloadDescription() map[string]*ParameterDescription {
 		required := defaultPayloadType.Field(i).Tag.Get("binding") == "required"
 
 		if description == "" {
-			FatalIncompleteParametersDescription(a.Resource, a.Verb, a.Name, field)
+			return nil, ErrIncompleteParametersDescription(field)
 		}
 
 		// Extract the information from struct definition
-		payloadDescription[field] = &ParameterDescription{
-			Name:        field,
-			DataType:    defaultPayloadType.Field(i).Type.String(),
-			Description: description,
-			Required:    required,
-		}
+		payloadDescription.Add(
+			field,
+			defaultPayloadType.Field(i).Type.String(),
+			description, required,
+		)
 
 	}
 
-	return payloadDescription
-}
-
-// PayloadParser
-func (a *Action) ParsePayload(c *gin.Context) (interface{}, error) {
-
-	// If get
-	if c.Request.Method == "GET" {
-		return a.ParseQueryParameters(c)
-	}
-
-	return a.ParseBody(c)
-
-}
-
-func (a *Action) ParseBody(c *gin.Context) (interface{}, error) {
-	defaultPayloadItf := a.GetDefaultPayload()
-
-	err := c.BindJSON(defaultPayloadItf)
-	if err != nil {
-		return nil, ErrWrongPayload(defaultPayloadItf)
-	}
-	return defaultPayloadItf, nil
-}
-
-// ParseQueryParameters
-func (a *Action) ParseQueryParameters(c *gin.Context) (interface{}, error) {
-
-	queryParameters := c.Request.URL.Query()
-
-	defaultPayloadItf := a.GetDefaultPayload()
-
-	defaultPayloadValue := reflect.ValueOf(defaultPayloadItf).Elem()
-	defaultPayloadType := defaultPayloadValue.Type()
-	queryParametersAsMapStrItf := map[string]interface{}{}
-	for i := 0; i < defaultPayloadValue.NumField(); i++ {
-		field := defaultPayloadType.Field(i).Tag.Get("json")
-		required := defaultPayloadType.Field(i).Tag.Get("binding") == "required"
-		parameterValues := queryParameters[field]
-		if required && ((len(parameterValues) == 0) || (parameterValues[0] == "")) {
-			return nil, ErrWrongPayload(defaultPayloadItf)
-		}
-
-		// Populate the query parameters
-		if len(queryParameters[field]) == 1 {
-			queryParametersAsMapStrItf[field] = parameterValues[0]
-		} else {
-			queryParametersAsMapStrItf[field] = parameterValues
-		}
-	}
-
-	err := goutil.JsonRestruct(queryParametersAsMapStrItf, defaultPayloadItf)
-
-	if err != nil {
-		return nil, ErrWrongPayload(defaultPayloadItf)
-	}
-
-	return defaultPayloadItf, nil
-
+	return payloadDescription, nil
 }

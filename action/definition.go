@@ -1,17 +1,25 @@
 package action
 
+import (
+	"log"
+
+	"github.com/hippoai/goutil"
+)
+
 // Action is a wrapper
 // that handles authorization, and payload validation for
 // the payload and authorization token sent
 type Action struct {
-	Verb              string            `json:"verb"`
-	Resource          string            `json:"resource"`
-	Name              string            `json:"name"`
-	Description       string            `json:"description"`
-	ClaimsExtractor   ClaimsExtractor   `json:"claimsExtractor"`
-	AuthValidator     AuthValidator     `json:"authValidator"`
-	Handler           Handler           `json:"handler"`
-	GetDefaultPayload GetDefaultPayload `json:"getDefaultPayload"`
+	Verb                       string                      `json:"verb"`
+	Resource                   string                      `json:"resource"`
+	Name                       string                      `json:"name"`
+	Description                string                      `json:"description"`
+	ClaimsExtractor            ClaimsExtractor             `json:"-"`
+	AuthValidator              AuthValidator               `json:"-"`
+	Handler                    Handler                     `json:"-"`
+	GetDefaultPayload          GetDefaultPayload           `json:"-"`
+	GetParsedPayload           func() (interface{}, error) `json:"-"`
+	ExpectedPayloadDescription *PayloadDescription         `json:"expectedPayloadDescription"`
 }
 
 // NewAction instanciates
@@ -28,13 +36,22 @@ func NewAction(
 		FatalNoActionDescription()
 	}
 
+	expectedPayloadDescription, err := ExtractExpectedPayload(getDefaultPayload())
+	if err != nil {
+		log.Fatalf("No payload description | Name %s - Err %s", name, goutil.Pretty(err))
+	}
+
 	return &Action{
-		Name:              name,
-		Description:       description,
-		ClaimsExtractor:   claimsExtractor,
-		AuthValidator:     authValidator,
-		Handler:           handler,
-		GetDefaultPayload: getDefaultPayload,
+		Name:                       name,
+		Description:                description,
+		ClaimsExtractor:            claimsExtractor,
+		AuthValidator:              authValidator,
+		Handler:                    handler,
+		GetDefaultPayload:          getDefaultPayload,
+		ExpectedPayloadDescription: expectedPayloadDescription,
+		GetParsedPayload: func() (interface{}, error) {
+			return nil, ErrParsePayloadNotImplementedYet()
+		},
 	}
 
 }
