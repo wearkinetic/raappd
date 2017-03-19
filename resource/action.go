@@ -1,17 +1,20 @@
 package resource
 
-import "github.com/hippoai/raappd/action"
+import (
+	"sort"
+
+	"github.com/hippoai/raappd/action"
+)
 
 // AddGet
 func (r *Resource) AddGet(a *action.Action) {
-	_, exists := r.Gets[a.Name]
-	if exists {
-		FatalGetActionAlreadyExists(a.Name)
-	}
 
 	a.Resource = r.Endpoint
 	a.Verb = "GET"
-	r.Gets[a.Name] = a
+	r.Gets = append(r.Gets, a)
+
+	// Sort - the list of gets - the most complex payload description first
+	sort.Sort(r.Gets)
 
 }
 
