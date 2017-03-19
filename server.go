@@ -31,6 +31,7 @@ func NewServer() *Server {
 		Origins:        "*",
 		Methods:        "GET, PUT, POST, DELETE",
 		RequestHeaders: "Origin, Content-Type, Authorization",
+		ExposedHeaders: "Content-Range",
 	}))
 
 	return &Server{
