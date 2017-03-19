@@ -1,6 +1,10 @@
 package resource
 
-import "github.com/hippoai/raappd/action"
+import (
+	"fmt"
+
+	"github.com/hippoai/raappd/action"
+)
 
 type Doc struct {
 	Endpoint    string                 `json:"endpoint"`
@@ -21,8 +25,8 @@ func (r *Resource) MakeDoc() *Doc {
 
 	// Add the gets documentation
 	gets := map[string]*action.Doc{}
-	for key, get := range r.Gets {
-		gets[key] = get.MakeDoc()
+	for i, get := range r.Gets {
+		gets[fmt.Sprintf("GET.%d", i)] = get.MakeDoc()
 	}
 	doc.Gets = gets
 

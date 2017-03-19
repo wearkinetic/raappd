@@ -20,27 +20,27 @@ func (server *Server) AddResource(version string, r *resource.Resource) {
 
 	// Add the Gets
 	if len(r.Gets) > 0 {
-		server.Engine.GET(versionedEndpoint, r.MakeGetsHandler())
+		server.Engine.GET(versionedEndpoint, r.MakeGetHandler())
 	}
 
 	// Add the Post
 	if r.Post != nil {
-		server.Engine.POST(versionedEndpoint, r.Post.GetHandler())
+		server.Engine.POST(versionedEndpoint, r.MakeNotGetHandler(r.Post))
 	}
 
 	// Add the Put
 	if r.Put != nil {
-		server.Engine.PUT(versionedEndpoint, r.Put.GetHandler())
+		server.Engine.PUT(versionedEndpoint, r.MakeNotGetHandler(r.Put))
 	}
 
 	// Add the Delete
 	if r.Delete != nil {
-		server.Engine.DELETE(versionedEndpoint, r.Delete.GetHandler())
+		server.Engine.DELETE(versionedEndpoint, r.MakeNotGetHandler(r.Delete))
 	}
 
 	// Add the Patch
 	if r.Patch != nil {
-		server.Engine.PATCH(versionedEndpoint, r.Patch.GetHandler())
+		server.Engine.PATCH(versionedEndpoint, r.MakeNotGetHandler(r.Patch))
 	}
 
 }
