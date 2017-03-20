@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hippoai/goutil"
+	"github.com/hippoai/raappd/constants"
 )
 
 // ParseBody for POST, PATCH, PUT, DELETE
@@ -26,17 +27,11 @@ func ParseGETParameters(c *gin.Context) map[string]interface{} {
 	queryParameters := c.Request.URL.Query()
 	for k, v := range queryParameters {
 		if len(v) > 1 {
-			m[k] = v
+			m[k] = strings.Join(v, constants.SPLIT_SLICE)
 			continue
 		}
 		if len(v) == 1 {
-			splitted := strings.Split(v[0], ",")
-			if len(splitted) > 1 {
-				m[k] = splitted
-				continue
-			} else {
-				m[k] = v[0]
-			}
+			m[k] = v[0]
 		}
 	}
 
