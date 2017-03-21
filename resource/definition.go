@@ -11,13 +11,14 @@ import (
 // Resource wraps all the get, post, update and delete "verb"s for
 // for a given resource. It also enforces a description.
 type Resource struct {
-	Endpoint    string         `json:"endpoint"`
-	Description string         `json:"description"`
-	Gets        Actions        `json:"gets"`
-	Post        *action.Action `json:"post"`
-	Put         *action.Action `json:"update"`
-	Delete      *action.Action `json:"delete"`
-	Patch       *action.Action `json:"patch"`
+	Endpoint        string            `json:"endpoint"`
+	Description     string            `json:"description"`
+	Gets            Actions           `json:"gets"`
+	Post            *action.Action    `json:"post"`
+	Put             *action.Action    `json:"update"`
+	Delete          *action.Action    `json:"delete"`
+	Patch           *action.Action    `json:"patch"`
+	ResponseFormats []*ResponseFormat `json:"responseFormats"`
 }
 
 // NewResource instanciates an Endpoint
@@ -31,12 +32,13 @@ func NewResource(endpoint, description string) *Resource {
 	}
 
 	return &Resource{
-		Endpoint:    endpoint,
-		Description: description,
-		Gets:        NewActions(),
-		Post:        nil,
-		Put:         nil,
-		Delete:      nil,
-		Patch:       nil,
+		Endpoint:        endpoint,
+		Description:     description,
+		Gets:            NewActions(),
+		Post:            nil,
+		Put:             nil,
+		Delete:          nil,
+		Patch:           nil,
+		ResponseFormats: []*ResponseFormat{},
 	}
 }
