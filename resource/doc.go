@@ -7,20 +7,22 @@ import (
 )
 
 type Doc struct {
-	Endpoint    string                 `json:"endpoint"`
-	Description string                 `json:"description"`
-	Gets        map[string]*action.Doc `json:"gets"`
-	Post        *action.Doc            `json:"post"`
-	Put         *action.Doc            `json:"update"`
-	Delete      *action.Doc            `json:"delete"`
-	Patch       *action.Doc            `json:"patch"`
+	Endpoint        string                 `json:"endpoint"`
+	Description     string                 `json:"description"`
+	Gets            map[string]*action.Doc `json:"gets"`
+	Post            *action.Doc            `json:"post"`
+	Put             *action.Doc            `json:"update"`
+	Delete          *action.Doc            `json:"delete"`
+	Patch           *action.Doc            `json:"patch"`
+	ResponseFormats []*ResponseFormat      `json:"responseFormats"`
 }
 
 func (r *Resource) MakeDoc() *Doc {
 
 	doc := &Doc{
-		Endpoint:    r.Endpoint,
-		Description: r.Description,
+		Endpoint:        r.Endpoint,
+		Description:     r.Description,
+		ResponseFormats: r.ResponseFormats,
 	}
 
 	// Add the gets documentation
