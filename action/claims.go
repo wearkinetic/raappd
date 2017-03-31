@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ClaimsExtractor func(claimsAsJWTMapClaims jwt.MapClaims) (claimsItf interface{}, err error)
+type ClaimsExtractor func(claimsAsJWTMapClaims jwt.MapClaims, permissions []string) (claimsItf interface{}, err error)
 
 // ExtractClaims into jwt.Claims format
 func ExtractClaims(c *gin.Context) (jwt.MapClaims, error) {

@@ -21,7 +21,7 @@ func (r *Resource) MakeNotGetHandler(a *action.Action) func(c *gin.Context) {
 		}
 
 		// 2 - If it worked, server it and let the action do the rest
-		a.GetHandler(c, payloadItf)
+		a.GetHandler(c, payloadItf, a.Permissions)
 
 	}
 
@@ -49,7 +49,7 @@ func (r *Resource) MakeGetHandler() func(c *gin.Context) {
 			return
 		}
 
-		bestGet.GetHandler(c, payloadItf)
+		bestGet.GetHandler(c, payloadItf, bestGet.Permissions)
 
 	}
 

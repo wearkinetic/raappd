@@ -4,6 +4,7 @@ type Doc struct {
 	Name                      string              `json:"name"`
 	Description               string              `json:"description"`
 	ExpectedPayloadDesription *PayloadDescription `json:"parameters"`
+	Permissions               []string            `json:"permissions"`
 }
 
 func (a *Action) MakeDoc() *Doc {
@@ -12,5 +13,6 @@ func (a *Action) MakeDoc() *Doc {
 		Name:                      a.Name,
 		Description:               a.Description,
 		ExpectedPayloadDesription: a.ExpectedPayloadDescription,
+		Permissions:               a.Permissions,
 	}
 }

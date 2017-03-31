@@ -14,6 +14,7 @@ type Action struct {
 	Resource                   string                      `json:"resource"`
 	Name                       string                      `json:"name"`
 	Description                string                      `json:"description"`
+	Permissions                []string                    `json:"permissions"`
 	ClaimsExtractor            ClaimsExtractor             `json:"-"`
 	AuthValidator              AuthValidator               `json:"-"`
 	Handler                    Handler                     `json:"-"`
@@ -26,6 +27,7 @@ type Action struct {
 func NewAction(
 	name string,
 	description string,
+	permissions []string,
 	claimsExtractor ClaimsExtractor,
 	authValidator AuthValidator,
 	handler Handler,
@@ -44,6 +46,7 @@ func NewAction(
 	return &Action{
 		Name:                       name,
 		Description:                description,
+		Permissions:                permissions,
 		ClaimsExtractor:            claimsExtractor,
 		AuthValidator:              authValidator,
 		Handler:                    handler,

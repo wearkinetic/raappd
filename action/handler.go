@@ -8,7 +8,7 @@ import (
 type Handler func(c *gin.Context, payloadItf interface{}, claimsItf interface{})
 
 // GetHandler returns the augmented handler for this action
-func (a *Action) GetHandler(c *gin.Context, payloadItf interface{}) {
+func (a *Action) GetHandler(c *gin.Context, payloadItf interface{}, permissions []string) {
 
 	if a.IsPrivate() {
 		a.GetPrivateHandler(c, payloadItf)
@@ -27,14 +27,14 @@ func (a *Action) GetPrivateHandler(c *gin.Context, payloadItf interface{}) {
 		responses.RespondAccessNotGranted(c, ErrUnparsableJWT())
 		return
 	}
-	claimsItf, err := a.ClaimsExtractor(claimsJWTMapClaims)
+	claimsItf, err := a.ClaimsExtractor(claimsJWTMapClaims, a.Permissions)
 	if err != nil {
 		responses.RespondAccessNotGranted(c, ErrUnparsableJWT())
 		return
 	}
 
 	// 3 - Check the authorization
-	errAuthorization := a.AuthValidator(c, payloadItf, claimsItf)
+	errAuthorization := a.AuthValidator(c, payloadItf, claimsItf, a.Permissions)
 	if errAuthorization != nil {
 		responses.RespondError(c, errAuthorization)
 		return
