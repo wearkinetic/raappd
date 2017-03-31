@@ -20,6 +20,7 @@ type Action struct {
 	GetDefaultPayload          GetDefaultPayload           `json:"-"`
 	GetParsedPayload           func() (interface{}, error) `json:"-"`
 	ExpectedPayloadDescription *PayloadDescription         `json:"expectedPayloadDescription"`
+	Extra                      map[string]interface{}      `json:"extra"`
 }
 
 // NewAction instanciates
@@ -52,6 +53,7 @@ func NewAction(
 		GetParsedPayload: func() (interface{}, error) {
 			return nil, ErrParsePayloadNotImplementedYet()
 		},
+		Extra: map[string]interface{}{},
 	}
 
 }
