@@ -1,6 +1,6 @@
 # Rest Api with Authentication, Payload validation, Push notifications and embedded Documentation
 
-This library is a wrapper around [Gin Gonic](https://github.com/gin-gonic/gin) that provides the following built-in features:
+This library is a wrapper around [Gin Gonic](https://github.com/wearkinetic/gin) that provides the following built-in features:
 * Build an API with `REST` in mind
 * Authentication at the endpoint level, and not at the resource level, using `JWT` tokens.
 * Push notifications through WebSockets

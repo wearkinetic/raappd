@@ -1,6 +1,6 @@
 package responses
 
-import "github.com/gin-gonic/gin"
+import "github.com/wearkinetic/gin"
 
 func RespondError(c *gin.Context, err error) {
 	c.JSON(CODE_BAD_REQUEST, err)

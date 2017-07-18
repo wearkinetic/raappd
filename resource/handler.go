@@ -1,7 +1,7 @@
 package resource
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/wearkinetic/gin"
 	"github.com/hippoai/raappd/action"
 	"github.com/hippoai/raappd/responses"
 )

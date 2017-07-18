@@ -1,7 +1,7 @@
 package action
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/wearkinetic/gin"
 	"github.com/hippoai/raappd/responses"
 )
 

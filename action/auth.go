@@ -1,5 +1,5 @@
 package action
 
-import "github.com/gin-gonic/gin"
+import "github.com/wearkinetic/gin"
 
 type AuthValidator func(c *gin.Context, payloadItf interface{}, claimsItf interface{}) error

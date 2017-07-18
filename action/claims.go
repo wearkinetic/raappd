@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
+	"github.com/wearkinetic/gin"
 )
 
 type ClaimsExtractor func(claimsAsJWTMapClaims jwt.MapClaims) (claimsItf interface{}, err error)

@@ -3,7 +3,7 @@ package resource
 import (
 	"strings"
 
-	"github.com/gin-gonic/gin"
+	"github.com/wearkinetic/gin"
 	"github.com/hippoai/goutil"
 	"github.com/hippoai/raappd/constants"
 )

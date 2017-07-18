@@ -3,7 +3,7 @@ package action
 import (
 	"reflect"
 
-	"github.com/gin-gonic/gin"
+	"github.com/wearkinetic/gin"
 )
 
 type PayloadParser func(c *gin.Context) (payloadItf interface{}, err error)
